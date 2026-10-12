@@ -133,7 +133,7 @@ so a save by one session is visible to others; it also cleans up on `@PreDestroy
 - **Actions**: catalog edit/delete/save/attribute-editor, item create/add-attribute/
   add-category, stock adjust submit, permission-admin access.
 - **Users**: 15 total (5 per role) — `superadmin`, `admin`, `manager` plus 4 more
-  per role. **All seeded accounts share the password `12345`** (single shared
+  per role. **All seeded accounts share the password `your_password`** (single shared
   BCrypt hash). Change these before any real deployment.
 - **Sample data**: 4 categories, 4 products, 4 audit-log entries.
 
@@ -148,7 +148,7 @@ with a database named `inventory_portal`.
    ```
 2. Review/adjust the datasource in `src/main/resources/application.yml`
    (defaults: `jdbc:postgresql://localhost:5432/inventory_portal`,
-   user `postgres`, password `12345`).
+   user `postgres`, password `your_password`).
 3. Run the app — Flyway creates the schema and seeds data automatically:
    ```bash
    ./mvnw spring-boot:run        # or: mvn spring-boot:run
