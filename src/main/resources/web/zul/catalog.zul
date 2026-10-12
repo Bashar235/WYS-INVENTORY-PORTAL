@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk 
+    xmlns="http://www.zkoss.org/2005/zul">
+    <style src="~./style/theme.css"/>
+    <div hflex="1" vflex="1" sclass="page"
+         apply="org.zkoss.bind.BindComposer"
+         viewModel="@id('vm') @init('com.wys.inventory.viewmodel.ProductViewModel')">
+        <vlayout hflex="1" vflex="1" spacing="0">
+            <!-- Header -->
+            <div sclass="page-header">
+                <hlayout valign="middle" width="100%">
+                    <vlayout spacing="4px" hflex="1">
+                        <hlayout valign="middle" spacing="12px">
+                            <label sclass="page-title" value="Product Catalog &amp; Audit"/>
+                            <label sclass="badge badge-info"
+                                   value="@load(vm.productCount ne null ? (vm.productCount.toString().concat(' items')) : '0 items')"/>
+                        </hlayout>
+                        <label sclass="page-subtitle" value="Single-click to select an item. Double-click to edit inline, then click Save Changes."/>
+                    </vlayout>
+                    <hlayout valign="middle" spacing="12px">
+                        <button label="+ Add Item" sclass="btn-primary"
+                                onClick="@command('openItemCreator')"
+                                disabled="@load(not vm.canCreateItems)"
+                                tooltiptext="@load(vm.canCreateItems ? 'Open the new item creator form' : 'You do not have the ITEM_CREATE_SUBMIT permission')"/>
+                        <label value="Category" sclass="toolbar-label"/>
+                        <combobox value="@bind(vm.selectedCategory)" model="@load(vm.filterCategories)"
+                                  onChange="@command('loadProducts')" width="150px" readonly="true">
+                            <template name="model">
+                                <comboitem label="@load(each)" value="@load(each)"/>
+                            </template>
+                        </combobox>
+                        <button label="@load(vm.lowStockOnly ? 'Show All' : 'Low Stock Only')"
+                                onClick="@command('toggleLowStock')"
+                                sclass="@load(vm.lowStockOnly ? 'btn-primary' : 'btn-ghost')"/>
+                        <button label="↻ Refresh" sclass="btn-ghost" onClick="@command('loadProducts')"/>
+                    </hlayout>
+                </hlayout>
+            </div>
+            <!-- Table -->
+            <listbox model="@load(vm.products)"
+                     selectedItem="@bind(vm.selectedProduct)"
+                     vflex="1" hflex="1"
+                     sclass="data-table"
+                     emptyMessage="No products found in inventory repository."
+                     sizedByContent="false" span="true">
+                <listhead sizable="true">
+                    <listheader label="SKU"                width="110px" align="left"/>
+                    <listheader label="NAME"               width="190px" align="left"/>
+                    <listheader label="CATEGORY"           width="140px" align="left"/>
+                    <listheader label="QUANTITY"           width="100px" align="right"/>
+                    <listheader label="STATUS"             width="120px" align="left"/>
+                    <listheader label="REORDER"            width="100px" align="right"/>
+                    <listheader label="UNIT PRICE ($)"     width="120px" align="right"/>
+                    <listheader label="DYNAMIC ATTRIBUTES" width="200px" align="left"/>
+                </listhead>
+                <template name="model" var="prod">
+                    <listitem onDoubleClick="@command('startEdit', product=prod)"
+                              sclass="@load(vm.editingProduct eq prod ? 'row-editing' : '')">
+                        <!-- SKU -->
+                        <listcell>
+                            <label value="@load(prod.sku)" sclass="sku" tooltiptext="SKU identifier"/>
+                        </listcell>
+                        <!-- Product Name -->
+                        <listcell>
+                            <label value="@load(prod.name)" sclass="strong" visible="@load(vm.editingProduct ne prod)"/>
+                            <textbox value="@bind(prod.name)" visible="@load(vm.editingProduct eq prod)"
+                                     hflex="1" sclass="inline-input" placeholder="Product name"/>
+                        </listcell>
+                        <!-- Category -->
+                        <listcell>
+                            <label value="@load(prod.category)" visible="@load(vm.editingProduct ne prod)"/>
+                            <combobox value="@bind(prod.category)" model="@load(vm.categories)" visible="@load(vm.editingProduct eq prod)"
+                                      width="100%" sclass="inline-combo">
+                                <template name="model">
+                                    <comboitem label="@load(each.name)" value="@load(each.name)"/>
+                                </template>
+                            </combobox>
+                        </listcell>
+                        <!-- Quantity -->
+                        <listcell>
+                            <label value="@load(prod.quantity)" visible="@load(vm.editingProduct ne prod)"
+                                   sclass="@load(prod.quantity lt prod.reorderLevel ? 'qty qty-low' : 'qty qty-ok')"/>
+                            <intbox value="@bind(prod.quantity)" visible="@load(vm.editingProduct eq prod)"
+                                    width="100%" sclass="inline-input"
+                                    constraint="no negative: Quantity must be non-negative"/>
+                        </listcell>
+                        <!-- Status -->
+                        <listcell>
+                            <label value="@load(prod.quantity le 0 ? 'Out of stock' : (prod.quantity lt prod.reorderLevel ? 'Low stock' : 'In stock'))"
+                                   sclass="@load(prod.quantity le 0 ? 'badge badge-danger' : (prod.quantity lt prod.reorderLevel ? 'badge badge-warning' : 'badge badge-success'))"/>
+                        </listcell>
+                        <!-- Reorder Level -->
+                        <listcell>
+                            <label value="@load(prod.reorderLevel)" sclass="muted" visible="@load(vm.editingProduct ne prod)"/>
+                            <intbox value="@bind(prod.reorderLevel)" visible="@load(vm.editingProduct eq prod)"
+                                    width="100%" sclass="inline-input"
+                                    constraint="no negative: Reorder level must be non-negative"/>
+                        </listcell>
+                        <!-- Unit Price -->
+                        <listcell>
+                            <label value="@load(prod.unitPrice)" visible="@load(vm.editingProduct ne prod)"/>
+                            <doublebox value="@bind(prod.unitPrice)" visible="@load(vm.editingProduct eq prod)"
+                                       format="0.00" width="100%" sclass="inline-input"
+                                       constraint="no negative: Unit price must be non-negative"/>
+                        </listcell>
+                        <!-- Dynamic Attributes: summary, full detail on hover -->
+                        <listcell>
+                            <label value="@load(prod.attributesSummary)"
+                                   tooltiptext="@load(prod.fullAttributesSummary)"
+                                   sclass="attr-summary"/>
+                        </listcell>
+                    </listitem>
+                </template>
+            </listbox>
+            <!-- Bottom action bar -->
+            <div sclass="action-bar">
+                <hlayout valign="middle" width="100%">
+                    <hlayout valign="middle" spacing="10px" hflex="1">
+                        <label value="Selected item" sclass="action-bar-label"/>
+                        <label value="@load(vm.selectedProduct ne null ? (vm.selectedProduct.sku.concat(' - ').concat(vm.selectedProduct.name)) : 'None (click a row to select, double-click to edit)')"
+                               sclass="@load(vm.selectedProduct ne null ? 'action-bar-selection' : 'action-bar-empty')"/>
+                        <label value="[Editing active]" visible="@load(vm.editing)" sclass="badge badge-info"/>
+                    </hlayout>
+                    <hlayout valign="middle" spacing="10px">
+                        <button label="Edit Attributes"
+                                sclass="btn-ghost"
+                                visible="@load(vm.canEditAttributes)"
+                                disabled="@load(vm.selectedProduct eq null)"
+                                onClick="@command('openAttributeEditor', product=vm.selectedProduct)"
+                                tooltiptext="Open the dynamic attribute editor for the selected product"/>
+                        <button label="Cancel Edit"
+                                visible="@load(vm.editing and vm.canEditProducts)"
+                                sclass="btn-ghost"
+                                onClick="@command('cancelEdit')"
+                                tooltiptext="Discard the inline edit and reload the catalog"/>
+                        <button label="Save Changes"
+                                sclass="btn-primary"
+                                visible="@load(vm.canSaveProducts)"
+                                disabled="@load(vm.selectedProduct eq null)"
+                                onClick="@command('saveProduct')"
+                                tooltiptext="Save edited product directly to the database"/>
+                        <button label="Delete Item"
+                                sclass="btn-danger"
+                                visible="@load(vm.canDeleteProducts)"
+                                disabled="@load(vm.selectedProduct eq null)"
+                                onClick="@command('deleteSelected')"
+                                tooltiptext="Delete selected product from the database"/>
+                    </hlayout>
+                </hlayout>
+            </div>
+        </vlayout>
+    </div>
+</zk>

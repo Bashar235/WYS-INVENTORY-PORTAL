@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk 
+    xmlns="http://www.zkoss.org/2005/zul">
+    <style src="~./style/theme.css"/>
+    <window title="Manage Dynamic Attributes" sclass="modal" border="normal" width="520px" closable="true"
+            apply="org.zkoss.bind.BindComposer"
+            viewModel="@id('vm') @init('com.wys.inventory.viewmodel.AttributeEditorViewModel')">
+        <div sclass="modal-stack">
+            <!-- Product summary -->
+            <div sclass="summary-box">
+                <div sclass="modal-product">
+                    <label value="Product" sclass="meta-label"/>
+                    <label value="@load(vm.product.sku)" sclass="sku"/>
+                    <label value="@load(vm.product.name)" sclass="strong"/>
+                </div>
+            </div>
+            <label value="Attributes (Key - Value Pairs)" sclass="section-label"/>
+            <grid model="@load(vm.attributeRows)" sclass="data-grid" oddRowSclass="none"
+                  emptyMessage="No dynamic attributes yet. Click '+ Add Attribute' to create one.">
+                <columns>
+                    <column label="Attribute Key" width="190px"/>
+                    <column label="Value"/>
+                    <column width="50px" align="center"/>
+                </columns>
+                <template name="model" var="attr">
+                    <row>
+                        <textbox value="@bind(attr.key)" placeholder="e.g. warrantyMonths" hflex="1"/>
+                        <textbox value="@bind(attr.value)" placeholder="e.g. 24" hflex="1"/>
+                        <button label="✕" sclass="btn-danger-ghost" onClick="@command('removeRow', row=attr)" tooltiptext="Remove attribute"/>
+                    </row>
+                </template>
+            </grid>
+            <div>
+                <button label="+ Add Attribute" sclass="btn-tint" onClick="@command('addRow')"/>
+            </div>
+            <div sclass="modal-actions">
+                <button label="Cancel" sclass="btn-ghost" onClick="@command('cancel')"/>
+                <button label="Save Attributes" sclass="btn-primary" onClick="@command('save')"/>
+            </div>
+        </div>
+    </window>
+</zk>

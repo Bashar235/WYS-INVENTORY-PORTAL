@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <style src="~./style/theme.css"/>
+    <div hflex="1" vflex="1" sclass="page"
+         apply="org.zkoss.bind.BindComposer"
+         viewModel="@id('vm') @init('com.wys.inventory.viewmodel.DashboardViewModel')">
+
+        <!-- Auto-refresh safety timer every 30s; live updates arrive instantly via EventQueue -->
+        <timer delay="30000" repeats="true" running="true" onTimer="@command('refresh')"/>
+
+        <div sclass="page-inner">
+
+            <!-- ══ DASHBOARD HEADER ═══════════════════════════════════════ -->
+            <div sclass="dash-header">
+                <vlayout spacing="3px" hflex="1">
+                    <label sclass="page-title" value="@load(vm.greetingText)"/>
+                    <label sclass="page-subtitle" value="@load(vm.dashboardSubtitle)"/>
+                </vlayout>
+                <hlayout valign="middle" spacing="10px">
+                    <span sclass="badge badge-success badge-dot">
+                        <label value="@load(vm.headerLiveText)"/>
+                    </span>
+                    <button label="↻ Refresh"
+                            sclass="btn-ghost"
+                            onClick="@command('refresh')"
+                            tooltiptext="Re-read inventory telemetry from the database"/>
+                </hlayout>
+            </div>
+
+            <!-- ══ SUPER ADMIN EXECUTIVE HERO BANNER (Visible only for SUPER_ADMIN) ══ -->
+            <div sclass="superadmin-banner" visible="@load(vm.superAdmin)">
+                <div sclass="superadmin-banner-text">
+                    <span sclass="superadmin-banner-badge">SUPER ADMIN COMMAND CENTER</span>
+                    <label sclass="superadmin-banner-title" value="@load(vm.identityLine)"/>
+                    <label sclass="superadmin-banner-subtitle"
+                           value="Full system governance active. You have unrestricted access to permission matrix configuration, dynamic attributes, catalog editing, and complete audit logging."/>
+                </div>
+                <div sclass="superadmin-banner-actions">
+                    <button label="Configure Role Permissions →"
+                            sclass="superadmin-btn-light"
+                            visible="@load(vm.canOpenPermissionAdmin)"
+                            onClick="@command('navigateToModule', target='~./zul/permissionAdmin.zul')"/>
+                    <button label="View Audit Trail"
+                            sclass="superadmin-btn-ghost"
+                            onClick="@command('refresh')"/>
+                </div>
+            </div>
+
+            <!-- ══ SUPER ADMIN RBAC COVERAGE (Visible only for SUPER_ADMIN) ══ -->
+            <div sclass="card" visible="@load(vm.superAdmin)">
+                <div sclass="card-header card-header-split">
+                    <div sclass="card-header-text">
+                        <label sclass="card-title" value="Role &amp; Permission Coverage"/>
+                        <label sclass="card-subtitle"
+                               value="How many of the declarable permission keys each role currently holds"/>
+                    </div>
+                    <hlayout valign="middle" spacing="8px">
+                        <span sclass="badge badge-neutral"><label value="@load(vm.rolesCountText)"/></span>
+                        <span sclass="badge badge-neutral"><label value="@load(vm.actionsCountText)"/></span>
+                        <span sclass="badge badge-info"><label value="@load(vm.auditLogsCountText)"/></span>
+                    </hlayout>
+                </div>
+
+                <div sclass="empty-state" visible="@load(vm.roleCoverageEmpty)">
+                    <label sclass="empty-state-text" value="No roles are configured yet."/>
+                </div>
+
+                <div sclass="cov-list" children="@load(vm.roleCoverage)">
+                    <template name="children" var="cov">
+                        <div sclass="cov-row">
+                            <div sclass="cov-meta">
+                                <div sclass="cov-title">
+                                    <span sclass="@load(vm.getRoleBadgeClass(cov.roleCode))">
+                                        <label value="@load(cov.roleCode)"/>
+                                    </span>
+                                    <label sclass="cov-name" value="@load(cov.roleName)"/>
+                                </div>
+                                <label sclass="cov-count" value="@load(cov.countText)"/>
+                            </div>
+                            <div sclass="cov-track">
+                                <div sclass="@load(cov.toneClass)" style="@load(cov.widthStyle)"/>
+                            </div>
+                            <label sclass="cov-pct" value="@load(cov.pctText)"/>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- ══ SUPER ADMIN EXECUTIVE KPI METRICS (Visible only for SUPER_ADMIN) ══ -->
+            <div sclass="superadmin-kpi-grid" visible="@load(vm.superAdmin)">
+                <!-- Total System Users -->
+                <div sclass="superadmin-kpi-card">
+                    <div sclass="superadmin-kpi-top">
+                        <label sclass="superadmin-kpi-label" value="System Users"/>
+                        <span sclass="superadmin-kpi-icon module-icon-blue">👥</span>
+                    </div>
+                    <label sclass="superadmin-kpi-val" value="@load(vm.totalUsersCount)"/>
+                    <label sclass="superadmin-kpi-sub" value="Active users across roles"/>
+                </div>
+
+                <!-- Roles & Permissions -->
+                <div sclass="superadmin-kpi-card">
+                    <div sclass="superadmin-kpi-top">
+                        <label sclass="superadmin-kpi-label" value="RBAC Security Matrix"/>
+                        <span sclass="superadmin-kpi-icon module-icon-purple">🛡️</span>
+                    </div>
+                    <label sclass="superadmin-kpi-val" value="@load(vm.rolesCountText)"/>
+                    <label sclass="superadmin-kpi-sub" value="@load(vm.actionsCountText)"/>
+                </div>
+
+                <!-- Total Inventory Capital Valuation -->
+                <div sclass="superadmin-kpi-card">
+                    <div sclass="superadmin-kpi-top">
+                        <label sclass="superadmin-kpi-label" value="Total Inventory Value"/>
+                        <span sclass="superadmin-kpi-icon module-icon-green">💰</span>
+                    </div>
+                    <label sclass="superadmin-kpi-val" value="@load(vm.formattedTotalValue)"/>
+                    <label sclass="superadmin-kpi-sub" value="@load(vm.productsCountText)"/>
+                </div>
+
+                <!-- Total Units & Stock Alerts -->
+                <div sclass="superadmin-kpi-card">
+                    <div sclass="superadmin-kpi-top">
+                        <label sclass="superadmin-kpi-label" value="Warehouse Stock"/>
+                        <span sclass="superadmin-kpi-icon module-icon-amber">📦</span>
+                    </div>
+                    <label sclass="superadmin-kpi-val" value="@load(vm.totalUnitsFormatted)"/>
+                    <label sclass="superadmin-kpi-sub" value="@load(vm.lowStockCountText)"/>
+                </div>
+            </div>
+
+            <!-- ══ QUICK ACCESS MODULES ═══════════════════════════════════ -->
+            <label sclass="section-label" value="Quick Access Modules"/>
+            <div sclass="module-grid">
+
+                <!-- Permission Admin Card (menu-gated) -->
+                <div sclass="module-card"
+                     visible="@load(vm.canOpenPermissionAdmin)"
+                     onClick="@command('navigateToModule', target='~./zul/permissionAdmin.zul')">
+                    <label sclass="module-icon module-icon-purple" value="❖"/>
+                    <label sclass="module-title" value="Permission Management"/>
+                    <label sclass="module-desc" value="Dynamic RBAC controller: grant or revoke menu visibility and operational actions for each system role in real time."/>
+                    <label sclass="module-link" value="Manage Permissions →"/>
+                </div>
+
+                <!-- Product Catalog Card -->
+                <div sclass="module-card"
+                     visible="@load(vm.canOpenCatalog)"
+                     onClick="@command('navigateToModule', target='~./zul/catalog.zul')">
+                    <label sclass="module-icon module-icon-blue" value="≡"/>
+                    <label sclass="module-title" value="Product Catalog &amp; Audit"/>
+                    <label sclass="module-desc" value="View, filter by category, inspect dynamic JSON attributes, and execute double-click inline edits."/>
+                    <label sclass="module-link" value="Open Catalog →"/>
+                </div>
+
+                <!-- New Item Creator Card (menu-gated) -->
+                <div sclass="module-card"
+                     visible="@load(vm.canOpenItemCreator)"
+                     onClick="@command('navigateToModule', target='~./zul/itemCreator.zul')">
+                    <label sclass="module-icon module-icon-green" value="+"/>
+                    <label sclass="module-title" value="New Item Creator"/>
+                    <label sclass="module-desc" value="Add new products with custom SKU tracking, dynamic key-value attributes, and category assignment."/>
+                    <label sclass="module-link" value="Create Item →"/>
+                </div>
+
+                <!-- Stock Adjustments Card (menu-gated) -->
+                <div sclass="module-card"
+                     visible="@load(vm.canOpenStockAdjust)"
+                     onClick="@command('navigateToModule', target='~./zul/stockAdjust.zul')">
+                    <label sclass="module-icon module-icon-amber" value="±"/>
+                    <label sclass="module-title" value="Stock Adjustments"/>
+                    <label sclass="module-desc" value="Record balance increments or decrements with automated audit logging for warehouse accountability."/>
+                    <label sclass="module-link" value="Adjust Stock →"/>
+                </div>
+
+            </div>
+
+            <!-- ══ LIVE STOCK TELEMETRY CHARTS ════════════════════════════ -->
+            <label sclass="section-label" value="Live Inventory Overview"/>
+            <div sclass="chart-row">
+                <!-- Stock by category -->
+                <div sclass="card chart-card chart-card-wide">
+                    <div sclass="card-header card-header-split">
+                        <div sclass="card-header-text">
+                            <label sclass="card-title" value="Stock by Category"/>
+                            <label sclass="card-subtitle" value="@load(vm.summaryText)"/>
+                        </div>
+                        <label sclass="badge badge-success badge-dot" value="@load(vm.liveText)"/>
+                    </div>
+                    <div visible="@load(empty vm.categoryBars)" sclass="chart-empty">
+                        <label sclass="empty-state-title" value="No products yet"/>
+                        <label sclass="empty-state-text" value="Add an item and the chart will appear here."/>
+                    </div>
+                    <div children="@load(vm.categoryBars)" sclass="bar-list">
+                        <template name="children" var="bar">
+                            <div sclass="bar-row">
+                                <div sclass="bar-meta">
+                                    <div sclass="bar-title">
+                                        <label sclass="bar-name" value="@load(bar.name)"/>
+                                        <label sclass="badge badge-warning" value="@load(bar.lowText)"
+                                               visible="@load(bar.lowCount gt 0)"/>
+                                    </div>
+                                    <label sclass="bar-detail" value="@load(bar.detailText)"/>
+                                </div>
+                                <div sclass="bar-track">
+                                    <div sclass="bar-fill" style="@load(bar.widthStyle)"/>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Stock health donut -->
+                <div sclass="card chart-card">
+                    <div sclass="card-header">
+                        <label sclass="card-title" value="Stock Health"/>
+                        <label sclass="card-subtitle" value="@load(vm.alertSummaryText)"/>
+                    </div>
+                    <div sclass="donut-wrap">
+                        <div sclass="@load(vm.totalProducts eq 0 ? 'donut donut-empty' : 'donut')"
+                             style="@load(vm.donutStyle)">
+                            <div sclass="donut-hole">
+                                <label sclass="donut-total" value="@load(vm.totalProducts)"/>
+                                <label sclass="donut-caption" value="products"/>
+                            </div>
+                        </div>
+                        <div sclass="legend">
+                            <div sclass="legend-row">
+                                <div sclass="legend-dot legend-ok"/>
+                                <label sclass="legend-name" value="In stock"/>
+                                <label sclass="legend-count" value="@load(vm.inStockCount)"/>
+                                <label sclass="legend-pct" value="@load(vm.inStockPct)"/>
+                            </div>
+                            <div sclass="legend-row">
+                                <div sclass="legend-dot legend-low"/>
+                                <label sclass="legend-name" value="Low stock"/>
+                                <label sclass="legend-count" value="@load(vm.lowStockCount)"/>
+                                <label sclass="legend-pct" value="@load(vm.lowStockPct)"/>
+                            </div>
+                            <div sclass="legend-row">
+                                <div sclass="legend-dot legend-out"/>
+                                <label sclass="legend-name" value="Out of stock"/>
+                                <label sclass="legend-count" value="@load(vm.outOfStockCount)"/>
+                                <label sclass="legend-pct" value="@load(vm.outOfStockPct)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ SUPER ADMIN AUDIT TRAIL LOGS (Visible only for SUPER_ADMIN) ══ -->
+            <div visible="@load(vm.superAdmin)">
+                <label sclass="section-label" value="System Activity &amp; Warehouse Audit Trail"/>
+                <div sclass="card">
+                    <div sclass="card-header card-header-split">
+                        <div sclass="card-header-text">
+                            <label sclass="card-title" value="Recent Warehouse Audit Logs"/>
+                            <label sclass="card-subtitle" value="Latest 10 logged inventory modifications with actor attribution"/>
+                        </div>
+                        <button label="Refresh Logs"
+                                sclass="btn btn-secondary btn-sm"
+                                onClick="@command('refresh')"/>
+                    </div>
+
+                    <div visible="@load(empty vm.recentAuditLogs)" sclass="chart-empty">
+                        <label sclass="empty-state-title" value="No audit logs recorded yet"/>
+                        <label sclass="empty-state-text" value="Perform stock adjustments to generate real-time audit logs."/>
+                    </div>
+
+                    <listbox model="@load(vm.recentAuditLogs)"
+                             visible="@load(not empty vm.recentAuditLogs)"
+                             sclass="table"
+                             emptyMessage="No audit records found.">
+                        <listhead>
+                            <listheader label="Timestamp" width="160px"/>
+                            <listheader label="Actor" width="120px"/>
+                            <listheader label="SKU" width="140px"/>
+                            <listheader label="Action" width="180px"/>
+                            <listheader label="Delta" width="90px" align="right"/>
+                            <listheader label="Qty Shift" width="110px" align="center"/>
+                            <listheader label="Audit Notes / Reason" hflex="1"/>
+                        </listhead>
+                        <template name="model" var="log">
+                            <listitem>
+                                <listcell>
+                                    <label value="@load(vm.formatTimestamp(log.timestamp))" sclass="sub-detail"/>
+                                </listcell>
+                                <listcell>
+                                    <span sclass="badge badge-neutral">
+                                        <label value="@load(log.performedBy)"/>
+                                    </span>
+                                </listcell>
+                                <listcell>
+                                    <span sclass="sku">
+                                        <label value="@load(log.sku)"/>
+                                    </span>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(log.action)" style="font-weight: 500; font-size: 12px;"/>
+                                </listcell>
+                                <listcell>
+                                    <span sclass="@load(vm.getChangeBadgeClass(log.changeAmount))">
+                                        <label value="@load(vm.formatChangeAmount(log.changeAmount))"/>
+                                    </span>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(vm.getQuantityShift(log))"
+                                           style="font-family: var(--font-mono); font-size: 11px;"/>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(empty log.note ? '—' : log.note)" sclass="sub-detail"/>
+                                </listcell>
+                            </listitem>
+                        </template>
+                    </listbox>
+                </div>
+
+                <!-- ══ REGISTERED SYSTEM USERS CARD (Super Admin Exclusive) ══ -->
+                <div sclass="card">
+                    <div sclass="card-header">
+                        <label sclass="card-title" value="Registered System Accounts"/>
+                        <label sclass="card-subtitle" value="Active identities configured in the security database"/>
+                    </div>
+
+                    <listbox model="@load(vm.systemUsers)" sclass="table">
+                        <listhead>
+                            <listheader label="Username" width="160px"/>
+                            <listheader label="Role" width="150px"/>
+                            <listheader label="Email Address" width="220px"/>
+                            <listheader label="Status" width="110px"/>
+                            <listheader label="Created At" hflex="1"/>
+                        </listhead>
+                        <template name="model" var="u">
+                            <listitem>
+                                <listcell>
+                                    <label value="@load(u.username)" style="font-weight: 600;"/>
+                                </listcell>
+                                <listcell>
+                                    <span sclass="@load(vm.getRoleBadgeClass(u.roleCode))">
+                                        <label value="@load(u.roleCode)"/>
+                                    </span>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(u.email)"/>
+                                </listcell>
+                                <listcell>
+                                    <span sclass="@load(u.enabled ? 'badge badge-success' : 'badge badge-danger')">
+                                        <label value="@load(u.enabled ? 'Active' : 'Disabled')"/>
+                                    </span>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(vm.formatTimestamp(u.createdAt))" sclass="sub-detail"/>
+                                </listcell>
+                            </listitem>
+                        </template>
+                    </listbox>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</zk>

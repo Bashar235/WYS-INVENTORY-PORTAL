@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk 
+    xmlns="http://www.zkoss.org/2005/zul">
+    <style src="~./style/theme.css"/>
+    <div hflex="1" vflex="1" sclass="stock-page"
+         apply="org.zkoss.bind.BindComposer"
+         viewModel="@id('vm') @init('com.wys.inventory.viewmodel.StockAdjustViewModel')">
+        <vlayout hflex="1" vflex="1" spacing="0">
+            <!-- Header -->
+            <div sclass="stock-header">
+                <hlayout valign="middle" width="100%">
+                    <vlayout spacing="4px" hflex="1">
+                        <hlayout valign="middle" spacing="12px">
+                            <label sclass="page-title" value="Inventory &amp; Stock Adjustment"/>
+                            <label sclass="badge badge-info"
+                                   value="@load(vm.totalProducts ne null ? (vm.totalProducts.toString().concat(' items')) : '0 items')"/>
+                        </hlayout>
+                        <label sclass="page-subtitle"
+                               value="Select a product to inspect dynamic metadata, adjust live quantities, and record audit logs cleanly."/>
+                    </vlayout>
+                    <div sclass="search">
+                        <label sclass="search-icon" value=""/>
+                        <textbox id="searchBox"
+                                 value="@bind(vm.searchText)"
+                                 instant="true"
+                                 onChange="@command('search')"
+                                 onChanging="@command('search')"
+                                 placeholder="Filter by SKU or name..."
+                                 width="260px"
+                                 sclass="search-input"/>
+                        <button sclass="search-clear"
+                                label="✕"
+                                onClick="@command('clearSearch')"
+                                tooltiptext="Clear search"/>
+                    </div>
+                </hlayout>
+            </div>
+            <!-- Split layout -->
+            <hlayout hflex="1" vflex="1" spacing="0">
+                <!-- LEFT: product table -->
+                <div hflex="3" vflex="1" sclass="split-list">
+                    <listbox model="@load(vm.filteredProducts)"
+                             selectedItem="@bind(vm.selectedProduct)"
+                             vflex="1" hflex="1"
+                             sclass="data-table"
+                             emptyMessage="No products match your search criteria."
+                             sizedByContent="false" span="true">
+                        <listhead>
+                            <listheader label="SKU"      width="120px" align="left"/>
+                            <listheader label="PRODUCT"  hflex="3"     align="left"/>
+                            <listheader label="CATEGORY" width="120px" align="left"/>
+                            <listheader label="STOCK"    width="80px"  align="right"/>
+                            <listheader label="STATUS"   width="115px" align="left"/>
+                            <listheader label="REORDER"  width="80px"  align="right"/>
+                            <listheader label="PRICE"    width="90px"  align="right"/>
+                        </listhead>
+                        <template name="model" var="prod">
+                            <listitem onClick="@command('selectProduct', product=prod)"
+                                      sclass="@load(vm.selectedProduct eq prod ? 'row-selected' : '')">
+                                <listcell>
+                                    <label value="@load(prod.sku)" sclass="sku"/>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(prod.name)" sclass="strong"/>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(prod.category)" sclass="muted"/>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(prod.quantity)"
+                                           sclass="@load(prod.quantity lt prod.reorderLevel ? 'qty qty-low' : 'qty qty-ok')"/>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(prod.quantity le 0 ? 'Out of stock' : (prod.quantity lt prod.reorderLevel ? 'Low stock' : 'In stock'))"
+                                           sclass="@load(prod.quantity le 0 ? 'badge badge-danger' : (prod.quantity lt prod.reorderLevel ? 'badge badge-warning' : 'badge badge-success'))"/>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(prod.reorderLevel)" sclass="muted"/>
+                                </listcell>
+                                <listcell>
+                                    <label value="@load(prod.unitPrice)" sclass="strong"/>
+                                </listcell>
+                            </listitem>
+                        </template>
+                    </listbox>
+                </div>
+                <!-- RIGHT: control panel -->
+                <div hflex="2" vflex="1" sclass="split-side">
+                    <!-- Empty state -->
+                    <div visible="@load(vm.selectedProduct eq null)" sclass="empty-state">
+                        <label sclass="empty-state-mark" value="≡"/>
+                        <label sclass="empty-state-title" value="No Product Selected"/>
+                        <label sclass="empty-state-text" value="Choose a row from the catalog on the left to view metrics and run adjustments."/>
+                    </div>
+                    <!-- Active form -->
+                    <div visible="@load(vm.selectedProduct ne null)">
+                        <!-- 1. Overview -->
+                        <div sclass="card">
+                            <div sclass="product-top">
+                                <label sclass="sku" value="@load(vm.selectedProduct.sku)"/>
+                                <div sclass="product-badges">
+                                    <label sclass="badge badge-neutral" value="@load(vm.selectedProduct.category)"/>
+                                    <label value="@load(vm.selectedProduct.quantity le 0 ? 'Out of stock' : (vm.selectedProduct.quantity lt vm.selectedProduct.reorderLevel ? 'Low stock' : 'In stock'))"
+                                           sclass="@load(vm.selectedProduct.quantity le 0 ? 'badge badge-danger' : (vm.selectedProduct.quantity lt vm.selectedProduct.reorderLevel ? 'badge badge-warning' : 'badge badge-success'))"/>
+                                </div>
+                            </div>
+                            <label sclass="product-name" value="@load(vm.selectedProduct.name)"/>
+                            <div sclass="stat-row">
+                                <div sclass="stat">
+                                    <label sclass="stat-label" value="Current Stock"/>
+                                    <label sclass="stat-value" value="@load(vm.selectedProduct.quantity)"/>
+                                </div>
+                                <div sclass="stat">
+                                    <label sclass="stat-label" value="Reorder Level"/>
+                                    <label sclass="stat-value stat-value-warning" value="@load(vm.selectedProduct.reorderLevel)"/>
+                                </div>
+                                <div sclass="stat">
+                                    <label sclass="stat-label" value="New Total"/>
+                                    <label sclass="@load(vm.previewQty lt 0 ? 'stat-value stat-value-negative' : 'stat-value stat-value-positive')"
+                                           value="@load(vm.previewQty)"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 2. Dynamic attributes -->
+                        <div sclass="card">
+                            <label sclass="section-label" value="Dynamic Attributes &amp; Metadata"/>
+                            <div visible="@load(empty vm.selectedProduct.attributes)">
+                                <label sclass="attr-empty" value="No custom attributes assigned to this product."/>
+                            </div>
+                            <div visible="@load(not empty vm.selectedProduct.attributes)">
+                                <label sclass="attr-text" value="@load(vm.selectedProduct.fullAttributesSummary)"/>
+                            </div>
+                        </div>
+                        <!-- 3. Quantity mutation -->
+                        <div sclass="card">
+                            <label sclass="section-label" value="Quantity Mutation"/>
+                            <div sclass="quick-actions">
+                                <button label="-10" sclass="btn-delta-neg" onClick="@command('quickDelta', amount=-10)"/>
+                                <button label="-5"  sclass="btn-delta-neg" onClick="@command('quickDelta', amount=-5)"/>
+                                <button label="-1"  sclass="btn-delta-neg" onClick="@command('quickDelta', amount=-1)"/>
+                                <button label="+1"  sclass="btn-delta-pos" onClick="@command('quickDelta', amount=1)"/>
+                                <button label="+5"  sclass="btn-delta-pos" onClick="@command('quickDelta', amount=5)"/>
+                                <button label="+10" sclass="btn-delta-pos" onClick="@command('quickDelta', amount=10)"/>
+                                <button label="+50" sclass="btn-delta-pos" onClick="@command('quickDelta', amount=50)"/>
+                            </div>
+                            <div sclass="form-stack">
+                                <div sclass="field">
+                                    <label sclass="field-label" value="Custom Delta (+/-)"/>
+                                    <intbox value="@bind(vm.delta)" onChange="@command('updatePreview')"
+                                            placeholder="0" width="100%" sclass="input"/>
+                                </div>
+                                <div sclass="field">
+                                    <label sclass="field-label" value="Reason / Classification"/>
+                                    <combobox value="@bind(vm.adjustmentType)" width="100%" readonly="true" sclass="input">
+                                        <comboitem label="Receiving (Purchase Order)" value="Receiving"/>
+                                        <comboitem label="Sale / Dispatch"         value="Sale"/>
+                                        <comboitem label="Damaged / Write-off"     value="Damaged"/>
+                                        <comboitem label="Stock Count Correction"  value="Correction"/>
+                                        <comboitem label="Transfer"                value="Transfer"/>
+                                    </combobox>
+                                </div>
+                                <div sclass="field">
+                                    <label sclass="field-label" value="Audit Note"/>
+                                    <textbox value="@bind(vm.note)" hflex="1" rows="2"
+                                             placeholder="Add optional notes for the audit trail..."
+                                             sclass="input"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Actions -->
+                        <div sclass="form-actions">
+                            <button label="Reset" sclass="btn-ghost" onClick="@command('resetForm')"/>
+                            <button label="Apply Adjustment" sclass="btn-primary" onClick="@command('save')"/>
+                        </div>
+                    </div>
+                </div>
+                <!-- /split-side -->
+            </hlayout>
+        </vlayout>
+    </div>
+</zk>

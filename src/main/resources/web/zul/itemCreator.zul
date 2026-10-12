@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk 
+    xmlns="http://www.zkoss.org/2005/zul">
+    <style src="~./style/theme.css"/>
+    <div hflex="1" vflex="1" sclass="page"
+         apply="org.zkoss.bind.BindComposer"
+         viewModel="@id('vm') @init('com.wys.inventory.viewmodel.ItemCreatorViewModel')">
+        <div sclass="form-shell">
+            <!-- Header -->
+            <div sclass="page-header">
+                <hlayout valign="middle" width="100%">
+                    <vlayout spacing="2px" hflex="1">
+                        <label sclass="page-title" value="Create New Product"/>
+                        <label sclass="page-subtitle" value="Add a new item to your catalog with custom metrics and dynamic attributes."/>
+                    </vlayout>
+                    <hlayout valign="middle" spacing="10px">
+                        <button label="Cancel" sclass="btn-ghost" onClick="@command('cancel')"/>
+                        <button label="Create Product" sclass="btn-primary" onClick="@command('save')"/>
+                    </hlayout>
+                </hlayout>
+            </div>
+            <!-- Card 1: Core information -->
+            <div sclass="card">
+                <div sclass="card-header">
+                    <label sclass="card-title" value="Core Information"/>
+                    <label sclass="card-subtitle" value="Primary identifying details for the inventory item."/>
+                </div>
+                <div sclass="field-row">
+                    <div sclass="field field-col">
+                        <label sclass="field-label" value="SKU"/>
+                        <textbox sclass="input" value="@bind(vm.product.sku)" placeholder="e.g. ELE-1042"/>
+                        <label sclass="field-hint" value="Unique stock unit code."/>
+                    </div>
+                    <div sclass="field field-col">
+                        <label sclass="field-label" value="Product Name"/>
+                        <textbox sclass="input" value="@bind(vm.product.name)" placeholder="e.g. Wireless Ergonomic Mouse"/>
+                        <label sclass="field-hint" value="Displayed across catalogs."/>
+                    </div>
+                </div>
+                <div sclass="field-row">
+                    <div sclass="field field-col">
+                        <label sclass="field-label" value="Category"/>
+                        <combobox value="@bind(vm.product.category)" model="@load(vm.categories)" readonly="false"
+                                  width="100%" sclass="input" placeholder="Select a category...">
+                            <template name="model">
+                                <comboitem label="@load(each.name)" value="@load(each.name)"/>
+                            </template>
+                        </combobox>
+                        <div sclass="field-inline">
+                            <textbox value="@bind(vm.newCategoryName)" placeholder="New category..." width="150px"/>
+                            <button label="Add" onClick="@command('addCategory')" sclass="btn-tint"/>
+                        </div>
+                        <label sclass="field-hint" value="Select from list or add a new one."/>
+                    </div>
+                    <div sclass="field field-col">
+                        <label sclass="field-label" value="Unit Price ($)"/>
+                        <doublebox sclass="input" value="@bind(vm.product.unitPrice)" format="0.00"
+                                   constraint="no negative: Unit price must be non-negative"/>
+                        <label sclass="field-hint" value="Price per single unit in USD."/>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2: Inventory thresholds -->
+            <div sclass="card">
+                <div sclass="card-header">
+                    <label sclass="card-title" value="Inventory Thresholds"/>
+                    <label sclass="card-subtitle" value="Starting stock quantity and low-stock warning thresholds."/>
+                </div>
+                <div sclass="field-row">
+                    <div sclass="field field-col">
+                        <label sclass="field-label" value="Initial Stock Quantity"/>
+                        <intbox sclass="input" value="@bind(vm.product.quantity)"
+                                constraint="no negative: Quantity must be non-negative"/>
+                        <label sclass="field-hint" value="Available units on hand right now."/>
+                    </div>
+                    <div sclass="field field-col">
+                        <label sclass="field-label" value="Reorder Level"/>
+                        <intbox sclass="input" value="@bind(vm.product.reorderLevel)"
+                                constraint="no negative: Reorder level must be non-negative"/>
+                        <label sclass="field-hint" value="Flags items as low-stock below this limit."/>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 3: Dynamic attributes -->
+            <div sclass="card">
+                <div sclass="card-header card-header-split">
+                    <div sclass="card-header-text">
+                        <label sclass="card-title" value="Dynamic Attributes"/>
+                        <label sclass="card-subtitle" value="Optional custom key/value metadata stored flexibly in MongoDB."/>
+                    </div>
+                    <button label="+ Add Attribute" sclass="btn-tint" onClick="@command('addAttr')"/>
+                </div>
+                <vlayout children="@load(vm.attributeRows)" spacing="8px">
+                    <template name="children" var="attr">
+                        <hlayout sclass="attr-row" spacing="8px" valign="middle">
+                            <textbox sclass="input" value="@bind(attr.key)" placeholder="Key (e.g. warrantyMonths)" hflex="2"/>
+                            <textbox sclass="input" value="@bind(attr.value)" placeholder="Value (e.g. 12)" hflex="3"/>
+                            <button label="✕" sclass="btn-danger-ghost" onClick="@command('removeAttr', row=attr)"
+                                    tooltiptext="Remove attribute"/>
+                        </hlayout>
+                    </template>
+                </vlayout>
+            </div>
+            <!-- Footer actions -->
+            <div sclass="form-actions">
+                <button label="Cancel" sclass="btn-ghost" onClick="@command('cancel')"/>
+                <button label="Create Product" sclass="btn-primary" onClick="@command('save')"/>
+            </div>
+        </div>
+    </div>
+</zk>

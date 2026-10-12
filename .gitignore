@@ -1,0 +1,37 @@
+# Build output
+target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Office temp/lock files
+~$*
+
+# Logs
+*.log
+logs/
+
+# Local secrets / scratch files
+cookies.txt
+*.local
+
+# Environment variables (never commit secrets)
+.env
+.env.*
+
+# Kilo config + agents
+.kilo/
+agents/
+
+# Generated documentation (not part of the source tree)
+docs/
+*.docx
+
+# Modernize tooling artifacts
+.github/modernize/

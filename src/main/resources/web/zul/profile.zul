@@ -1,0 +1,162 @@
+<?page title="My Profile — WYS Portal" contentType="text/html;charset=UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="native">
+    <style src="~./style/theme.css"/>
+
+    <div hflex="1" vflex="1" sclass="page profile-page"
+         apply="org.zkoss.bind.BindComposer"
+         viewModel="@id('vm') @init('com.wys.inventory.viewmodel.ProfileViewModel')">
+
+        <div sclass="page-inner">
+
+            <!-- ══════════ PAGE HEADER ══════════ -->
+            <div sclass="page-header profile-header">
+                <hlayout valign="middle" width="100%">
+                    <vlayout spacing="2px" hflex="1">
+                        <hlayout valign="middle" spacing="10px">
+                            <span sclass="profile-header-icon">👤</span>
+                            <label sclass="page-title" value="My Profile"/>
+                            <span sclass="badge badge-success badge-dot">
+                                <label value="Live"/>
+                            </span>
+                        </hlayout>
+                        <label sclass="page-subtitle"
+                               value="Your account details, role assignment, and session status."/>
+                    </vlayout>
+                    <hlayout valign="middle" spacing="8px">
+                        <button label="↻ Refresh"
+                                sclass="btn-ghost"
+                                onClick="@command('refresh')"
+                                tooltiptext="Re-read profile from database"/>
+                    </hlayout>
+                </hlayout>
+            </div>
+
+            <!-- ══════════ MAIN CONTENT ══════════ -->
+            <div sclass="profile-layout">
+
+                <!-- ── LEFT: Avatar + Identity Card ── -->
+                <div sclass="profile-side">
+
+                    <div sclass="card profile-avatar-card">
+                        <div sclass="profile-avatar-ring">
+                            <div sclass="profile-avatar">
+                                <label value="@load(vm.avatarInitial)"/>
+                            </div>
+                        </div>
+                        <label sclass="profile-username" value="@load(vm.username)"/>
+                        <span sclass="@load(vm.roleBadgeClass)">
+                            <label value="@load(vm.roleCode)"/>
+                        </span>
+                        <label sclass="profile-role-name" value="@load(vm.roleName)"/>
+                    </div>
+
+                    <!-- Quick stats -->
+                    <div sclass="card profile-stats-card">
+                        <div sclass="profile-stat-row">
+                            <div sclass="profile-stat">
+                                <label sclass="profile-stat-val" value="@load(vm.userId)"/>
+                                <label sclass="profile-stat-lab" value="User ID"/>
+                            </div>
+                            <div sclass="profile-stat-divider"/>
+                            <div sclass="profile-stat">
+                                <label sclass="profile-stat-val" value="@load(vm.accountStatusText)"/>
+                                <label sclass="profile-stat-lab" value="Status"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ── RIGHT: Details Card ── -->
+                <div sclass="profile-main">
+
+                    <div sclass="card">
+                        <div sclass="card-header card-header-split">
+                            <div sclass="card-header-text">
+                                <label sclass="card-title" value="Account Information"/>
+                                <label sclass="card-subtitle"
+                                       value="Details fetched directly from the users table."/>
+                            </div>
+                            <span sclass="@load(vm.accountStatusClass)">
+                                <label value="@load(vm.accountStatusText)"/>
+                            </span>
+                        </div>
+
+                        <div sclass="profile-details">
+                            <div sclass="profile-detail-row">
+                                <div sclass="profile-detail-label">
+                                    <label value="Username"/>
+                                </div>
+                                <div sclass="profile-detail-value">
+                                    <label value="@load(vm.username)"/>
+                                </div>
+                            </div>
+
+                            <div sclass="profile-detail-row">
+                                <div sclass="profile-detail-label">
+                                    <label value="Full Name"/>
+                                </div>
+                                <div sclass="profile-detail-value">
+                                    <label value="@load(vm.username)" sclass="profile-detail-main"/>
+                                </div>
+                            </div>
+
+                            <div sclass="profile-detail-row">
+                                <div sclass="profile-detail-label">
+                                    <label value="User ID"/>
+                                </div>
+                                <div sclass="profile-detail-value">
+                                    <label value="@load(vm.userId)" style="font-family: var(--font-mono);"/>
+                                </div>
+                            </div>
+
+                            <div sclass="profile-detail-row">
+                                <div sclass="profile-detail-label">
+                                    <label value="Role"/>
+                                </div>
+                                <div sclass="profile-detail-value">
+                                    <span sclass="@load(vm.roleBadgeClass)">
+                                        <label value="@load(vm.roleCode)"/>
+                                    </span>
+                                    <label value="@load(vm.roleName)" sclass="profile-detail-sub"/>
+                                </div>
+                            </div>
+
+                            <div sclass="profile-detail-row">
+                                <div sclass="profile-detail-label">
+                                    <label value="Email"/>
+                                </div>
+                                <div sclass="profile-detail-value">
+                                    <label value="@load(empty vm.email ? '—' : vm.email)"/>
+                                </div>
+                            </div>
+
+                            <div sclass="profile-detail-row">
+                                <div sclass="profile-detail-label">
+                                    <label value="Account Created"/>
+                                </div>
+                                <div sclass="profile-detail-value">
+                                    <label value="@load(vm.createdAt)" style="font-family: var(--font-mono);"/>
+                                </div>
+                            </div>
+
+                            <div sclass="profile-detail-row">
+                                <div sclass="profile-detail-label">
+                                    <label value="Session"/>
+                                </div>
+                                <div sclass="profile-detail-value">
+                                    <span sclass="badge badge-success badge-dot">
+                                        <label value="Authenticated"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</zk>

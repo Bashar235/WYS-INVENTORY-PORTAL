@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="WYS — Warehouse Inventory Solutions" contentType="text/html;charset=UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <style src="~./style/theme.css"/>
+
+    <html><![CDATA[
+    <div class="site">
+
+        <!-- ══ NAV ═══════════════════════════════════════════════════════ -->
+        <nav class="site-nav">
+            <div class="site-logo">
+                <div class="site-logo-mark">W</div>
+                <div>
+                    <span class="site-logo-text">WYS</span>
+                    <span class="site-logo-sub">Warehouse Solutions</span>
+                </div>
+            </div>
+            <ul class="site-nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#careers">Careers</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="tel:+18005550199" class="site-nav-cta">+1 (800) [PHONE]</a></li>
+            </ul>
+        </nav>
+
+        <!-- ══ HERO ══════════════════════════════════════════════════════ -->
+        <header class="site-hero">
+            <span class="site-hero-eyebrow">Established [Year] · Trusted Warehouse Partner</span>
+            <h1 class="site-hero-title">Excellence Built on <span class="site-accent">Solid Ground</span></h1>
+            <p class="site-hero-text">
+                WYS delivers enterprise-grade warehouse inventory management solutions — combining precision logistics, real-time stock intelligence, and proven operational frameworks to keep your supply chain running at peak performance.
+            </p>
+            <div class="site-cta-row">
+                <a href="zul/login.zul" class="site-btn-primary">View Projects</a>
+                <a href="#contact" class="site-btn-secondary">Contact Us</a>
+            </div>
+            <div class="site-stats">
+                <div>
+                    <span class="site-stat-num">[<span>YR</span>]</span>
+                    <span class="site-stat-label">Year Established</span>
+                </div>
+                <div>
+                    <span class="site-stat-num">300<span>+</span></span>
+                    <span class="site-stat-label">Projects Completed</span>
+                </div>
+                <div>
+                    <span class="site-stat-num">120<span>+</span></span>
+                    <span class="site-stat-label">Employees</span>
+                </div>
+                <div>
+                    <span class="site-stat-num">85<span>+</span></span>
+                    <span class="site-stat-label">Business Partners</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ══ INTRO ═════════════════════════════════════════════════════ -->
+        <section class="site-intro">
+            <div class="site-intro-inner">
+                <div class="site-intro-headline">Inventory Management Is What We Do.</div>
+                <div class="site-intro-divider"></div>
+                <div class="site-intro-text">
+                    WYS empowers businesses to take full control of their warehouse operations — delivering accurate, real-time inventory visibility that drives smarter decisions and measurable results across every level of your supply chain.
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ SERVICES ══════════════════════════════════════════════════ -->
+        <section class="site-section site-section-alt" id="services">
+            <div class="site-container">
+                <div class="site-section-head">
+                    <span class="site-eyebrow">What We Offer</span>
+                    <span class="site-title">Core Service Areas</span>
+                </div>
+                <div class="site-grid-3">
+                    <div class="site-card">
+                        <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=600&amp;auto=format&amp;fit=crop&amp;q=80" alt="Warehouse Management"/>
+                        <div class="site-card-body">
+                            <span class="site-card-title">Warehouse Management</span>
+                            <span class="site-card-text">End-to-end warehouse operations oversight — from receiving and putaway to picking, packing, and dispatch — engineered for maximum throughput and zero-error fulfillment.</span>
+                            <a href="#contact" class="site-link">Read more ›</a>
+                        </div>
+                    </div>
+                    <div class="site-card">
+                        <img src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=600&amp;auto=format&amp;fit=crop&amp;q=80" alt="Inventory Auditing"/>
+                        <div class="site-card-body">
+                            <span class="site-card-title">Inventory Auditing</span>
+                            <span class="site-card-text">Rigorous cycle counts, perpetual inventory tracking, and comprehensive audit trails ensuring your stock records match physical reality at all times — with full compliance reporting.</span>
+                            <a href="#contact" class="site-link">Read more ›</a>
+                        </div>
+                    </div>
+                    <div class="site-card">
+                        <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&amp;auto=format&amp;fit=crop&amp;q=80" alt="Supply Chain Consulting"/>
+                        <div class="site-card-body">
+                            <span class="site-card-title">Supply Chain Consulting</span>
+                            <span class="site-card-text">Strategic advisory services to optimize your inbound logistics, vendor relationships, reorder points, and overall supply chain resilience — tailored to your industry.</span>
+                            <a href="#contact" class="site-link">Read more ›</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ ABOUT ═════════════════════════════════════════════════════ -->
+        <section class="site-section" id="about">
+            <div class="site-container">
+                <div class="site-about">
+                    <div class="site-about-image">
+                        <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&amp;auto=format&amp;fit=crop&amp;q=80" alt="WYS Warehouse Operations"/>
+                        <div class="site-about-badge">
+                            <span class="site-about-badge-num">15+</span>
+                            <span class="site-about-badge-label">Years of Excellence</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="site-eyebrow">Who We Are</span>
+                        <span class="site-title">Built on Operational Integrity</span>
+                        <p class="site-about-body">
+                            WYS was founded with a single mission: to give businesses complete, confident command over their warehouse inventory. Over [Year Founded], we have grown into a trusted partner for distributors, manufacturers, and retailers across the region — providing the systems, processes, and expertise that eliminate stock discrepancies and drive operational excellence.
+                        </p>
+                        <div class="site-quote">
+                            <span class="site-quote-text">
+                                "We built WYS because we saw too many businesses losing revenue to invisible inventory problems. Our platform makes the invisible visible — in real time, every time."
+                            </span>
+                            <span class="site-quote-author">[Founder Name] — Founder &amp; CEO</span>
+                            <span class="site-quote-role">WYS Warehouse Inventory Solutions</span>
+                        </div>
+                        <div class="site-mini-stats">
+                            <div class="site-mini-stat">
+                                <span class="site-mini-stat-num">[<span>YR</span>]</span>
+                                <span class="site-mini-stat-label">Established</span>
+                            </div>
+                            <div class="site-mini-stat">
+                                <span class="site-mini-stat-num">300<span>+</span></span>
+                                <span class="site-mini-stat-label">Projects</span>
+                            </div>
+                            <div class="site-mini-stat">
+                                <span class="site-mini-stat-num">120<span>+</span></span>
+                                <span class="site-mini-stat-label">Employees</span>
+                            </div>
+                            <div class="site-mini-stat">
+                                <span class="site-mini-stat-num">85<span>+</span></span>
+                                <span class="site-mini-stat-label">Partners</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ CAPABILITIES ══════════════════════════════════════════════ -->
+        <section class="site-section site-section-alt">
+            <div class="site-container">
+                <div class="site-section-head">
+                    <span class="site-eyebrow">Full Capabilities</span>
+                    <span class="site-title">Everything You Need, Under One Roof</span>
+                </div>
+                <div class="site-grid-4">
+                    <div class="site-tile">
+                        <span class="site-tile-num">01</span>
+                        <span class="site-tile-title">Stock Control &amp; Replenishment</span>
+                        <span class="site-tile-text">Automated reorder points, safety stock calculations, and supplier-facing purchase orders to prevent costly stockouts.</span>
+                    </div>
+                    <div class="site-tile">
+                        <span class="site-tile-num">02</span>
+                        <span class="site-tile-title">Cycle Counting &amp; Reconciliation</span>
+                        <span class="site-tile-text">Scheduled and ad-hoc cycle counts with variance reporting and root-cause analysis workflows built in.</span>
+                    </div>
+                    <div class="site-tile">
+                        <span class="site-tile-num">03</span>
+                        <span class="site-tile-title">Real-Time Tracking</span>
+                        <span class="site-tile-text">Live inventory dashboards with barcode/RFID integration for accurate, up-to-the-second stock visibility across all locations.</span>
+                    </div>
+                    <div class="site-tile">
+                        <span class="site-tile-num">04</span>
+                        <span class="site-tile-title">Warehouse Layout Design</span>
+                        <span class="site-tile-text">Slotting optimization, zone configuration, and traffic-flow analysis to maximize picking efficiency and reduce travel time.</span>
+                    </div>
+                    <div class="site-tile">
+                        <span class="site-tile-num">05</span>
+                        <span class="site-tile-title">Receiving &amp; Putaway</span>
+                        <span class="site-tile-text">Structured inbound processes with quality inspection checkpoints, PO matching, and directed putaway logic for peak accuracy.</span>
+                    </div>
+                    <div class="site-tile">
+                        <span class="site-tile-num">06</span>
+                        <span class="site-tile-title">Dispatch &amp; Shipping Mgmt</span>
+                        <span class="site-tile-text">Outbound order management, carrier integration, and packing list generation with complete audit trails for every shipment.</span>
+                    </div>
+                    <div class="site-tile">
+                        <span class="site-tile-num">07</span>
+                        <span class="site-tile-title">Inventory Analytics</span>
+                        <span class="site-tile-text">Custom KPI dashboards, turnover ratio analysis, dead-stock identification, and executive-ready periodic reports.</span>
+                    </div>
+                    <div class="site-tile">
+                        <span class="site-tile-num">08</span>
+                        <span class="site-tile-title">System Integration &amp; Migration</span>
+                        <span class="site-tile-text">Seamless ERP, WMS, and e-commerce platform integrations with zero data-loss migration guarantees and expert onboarding.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ PROJECTS ══════════════════════════════════════════════════ -->
+        <section class="site-section" id="projects">
+            <div class="site-container">
+                <div class="site-projects-head">
+                    <div>
+                        <span class="site-eyebrow">Our Work</span>
+                        <span class="site-title">Featured Projects</span>
+                    </div>
+                    <a href="#contact" class="site-btn-text">View all projects ›</a>
+                </div>
+                <div class="site-projects">
+                    <div class="site-project">
+                        <div class="site-project-img"><img src="https://images.unsplash.com/photo-1586528116031-284d78e39a02?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="[Project 1]"/></div>
+                        <div class="site-project-body">
+                            <span class="site-project-caption">[Project Name 1] — Distribution Center Overhaul</span>
+                            <span class="site-project-tag">Warehouse Management</span>
+                        </div>
+                    </div>
+                    <div class="site-project">
+                        <div class="site-project-img"><img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=600&amp;auto=format&amp;fit=crop&amp;q=80" alt="[Project 2]"/></div>
+                        <div class="site-project-body">
+                            <span class="site-project-caption">[Project Name 2] — Cold Storage Inventory</span>
+                            <span class="site-project-tag">Specialized Storage</span>
+                        </div>
+                    </div>
+                    <div class="site-project">
+                        <div class="site-project-img"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&amp;auto=format&amp;fit=crop&amp;q=80" alt="[Project 3]"/></div>
+                        <div class="site-project-body">
+                            <span class="site-project-caption">[Project Name 3] — Retail Chain Stockrooms</span>
+                            <span class="site-project-tag">Retail Inventory</span>
+                        </div>
+                    </div>
+                    <div class="site-project">
+                        <div class="site-project-img"><img src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=600&amp;auto=format&amp;fit=crop&amp;q=80" alt="[Project 4]"/></div>
+                        <div class="site-project-body">
+                            <span class="site-project-caption">[Project Name 4] — Manufacturing Parts Tracking</span>
+                            <span class="site-project-tag">Inventory Auditing</span>
+                        </div>
+                    </div>
+                    <div class="site-project">
+                        <div class="site-project-img"><img src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=600&amp;auto=format&amp;fit=crop&amp;q=80" alt="[Project 5]"/></div>
+                        <div class="site-project-body">
+                            <span class="site-project-caption">[Project Name 5] — e-Commerce Fulfillment Hub</span>
+                            <span class="site-project-tag">Fulfillment Operations</span>
+                        </div>
+                    </div>
+                    <div class="site-project">
+                        <div class="site-project-img"><img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&amp;auto=format&amp;fit=crop&amp;q=80" alt="[Project 6]"/></div>
+                        <div class="site-project-body">
+                            <span class="site-project-caption">[Project Name 6] — Pharmaceutical Compliance</span>
+                            <span class="site-project-tag">Compliance Tracking</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ CLIENTS ═══════════════════════════════════════════════════ -->
+        <section class="site-clients">
+            <div class="site-container">
+                <span class="site-clients-label">Trusted by industry leaders</span>
+                <div class="site-clients-row">
+                    <div class="site-client">[Client A]</div>
+                    <div class="site-client">[Client B]</div>
+                    <div class="site-client">[Client C]</div>
+                    <div class="site-client">[Client D]</div>
+                    <div class="site-client">[Client E]</div>
+                    <div class="site-client">[Client F]</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ CONTACT ═══════════════════════════════════════════════════ -->
+        <section class="site-section" id="contact">
+            <div class="site-container">
+                <div class="site-section-head">
+                    <span class="site-eyebrow">Get In Touch</span>
+                    <span class="site-title">Ready to Optimize Your Warehouse?</span>
+                    <p class="site-lead">
+                        Whether you're looking to overhaul your inventory systems or simply need expert guidance, our team is ready to help you find the right solution.
+                    </p>
+                </div>
+                <div class="site-contact">
+                    <div>
+                        <div class="site-contact-item">
+                            <span class="site-contact-label">Address</span>
+                            <span class="site-contact-value">[Street Address]<br/>[City, State, ZIP Code]</span>
+                        </div>
+                        <div class="site-contact-item">
+                            <span class="site-contact-label">Phone</span>
+                            <span class="site-contact-value">+1 (800) [PHONE-NUMBER]</span>
+                        </div>
+                        <div class="site-contact-item">
+                            <span class="site-contact-label">Email</span>
+                            <span class="site-contact-value">[contact@wys-inventory.com]</span>
+                        </div>
+                        <div class="site-contact-item">
+                            <span class="site-contact-label">Business Hours</span>
+                            <span class="site-contact-value">Monday – Friday: 8AM – 6PM<br/>Saturday: 9AM – 2PM</span>
+                        </div>
+                    </div>
+                    <div class="site-form">
+                        <h3 class="site-form-title">Send Us a Message</h3>
+                        <div class="site-form-field">
+                            <label class="site-form-label">Full Name *</label>
+                            <input type="text" class="site-input" placeholder="Your full name"/>
+                        </div>
+                        <div class="site-form-field">
+                            <label class="site-form-label">Email Address *</label>
+                            <input type="email" class="site-input" placeholder="your@email.com"/>
+                        </div>
+                        <div class="site-form-field">
+                            <label class="site-form-label">Message *</label>
+                            <textarea class="site-input" placeholder="Tell us about your project or inquiry..." rows="5"></textarea>
+                        </div>
+                        <button class="site-submit" onclick="alert('Thank you! Your message has been sent. We will be in touch within 24 hours.');">Send Message</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ PORTAL CTA ════════════════════════════════════════════════ -->
+        <section class="site-portal">
+            <div class="site-portal-inner">
+                <h2 class="site-portal-title">Ready to Launch the Inventory Portal?</h2>
+                <p class="site-portal-text">Access real-time stock data, manage your catalog, and execute adjustments — all from one command center.</p>
+                <a href="zul/login.zul" class="site-btn-primary">Launch Command Center</a>
+            </div>
+        </section>
+
+        <!-- ══ FOOTER ════════════════════════════════════════════════════ -->
+        <footer class="site-footer">
+            <div class="site-footer-top">
+                <div>
+                    <div class="site-logo">
+                        <div class="site-logo-mark">W</div>
+                        <div>
+                            <span class="site-logo-text">WYS</span>
+                            <span class="site-logo-sub">Warehouse Solutions</span>
+                        </div>
+                    </div>
+                    <p class="site-footer-tagline">
+                        WYS delivers enterprise-grade warehouse inventory management — trusted by industry leaders since [Year]. Precision. Reliability. Results.
+                    </p>
+                    <div class="site-social">
+                        <div class="site-social-btn">in</div>
+                        <div class="site-social-btn">𝕏</div>
+                        <div class="site-social-btn">f</div>
+                        <div class="site-social-btn">▶</div>
+                    </div>
+                </div>
+                <div>
+                    <span class="site-footer-title">Services</span>
+                    <a class="site-footer-link" href="#services">Warehouse Management</a>
+                    <a class="site-footer-link" href="#services">Inventory Auditing</a>
+                    <a class="site-footer-link" href="#services">Supply Chain Consulting</a>
+                    <a class="site-footer-link" href="#services">System Integration</a>
+                </div>
+                <div>
+                    <span class="site-footer-title">Company</span>
+                    <a class="site-footer-link" href="#about">About Us</a>
+                    <a class="site-footer-link" href="#projects">Projects</a>
+                    <a id="careers" class="site-footer-link" href="#contact">Careers</a>
+                    <a class="site-footer-link" href="#contact">Press</a>
+                </div>
+                <div>
+                    <span class="site-footer-title">Get In Touch</span>
+                    <a class="site-footer-link" href="#contact">Contact Us</a>
+                    <a class="site-footer-link" href="tel:+18005550199">+1 (800) [PHONE]</a>
+                    <a class="site-footer-link" href="mailto:contact@wys.com">[contact@wys.com]</a>
+                    <a class="site-footer-link" href="zul/login.zul">Launch Portal</a>
+                </div>
+            </div>
+            <div class="site-footer-bottom">
+                <span class="site-copy">© [Year] WYS Warehouse Inventory Solutions. All Rights Reserved.</span>
+                <div class="site-legal">
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    ]]></html>
+</zk>

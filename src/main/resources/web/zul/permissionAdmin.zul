@@ -1,0 +1,256 @@
+<?page title="Permission Management — WYS Portal" contentType="text/html;charset=UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="native">
+    <style src="~./style/theme.css"/>
+
+    <div hflex="1" vflex="1" sclass="page perm-root"
+         apply="org.zkoss.bind.BindComposer"
+         viewModel="@id('vm') @init('com.wys.inventory.viewmodel.PermissionAdminViewModel')">
+
+      <div sclass="page-inner perm-content">
+
+        <!-- ══════════ 1. HEADER CARD ══════════ -->
+        <div sclass="card perm-header-card" visible="@load(vm.authorized)">
+        <div sclass="perm-header-left">
+          <hlayout valign="middle" spacing="10px">
+            <label sclass="page-title" value="Permission Management"/>
+            <span sclass="badge badge-info badge-dot" visible="@load(vm.pendingChangesCount gt 0)">
+              <label value="@load(vm.pendingChangesCountStr)"/>
+            </span>
+            <span sclass="badge badge-success badge-dot" visible="@load(vm.pendingChangesCount eq 0 and not vm.saving)">
+              <label value="Saved"/>
+            </span>
+            <span sclass="badge badge-warning badge-dot" visible="@load(vm.saving)">
+              <label value="Saving..."/>
+            </span>
+          </hlayout>
+          <label sclass="page-subtitle"
+                 value="Select a role or user, make changes, then click Save to persist."/>
+        </div>
+        <hlayout valign="middle" spacing="8px" sclass="perm-header-actions">
+          <button label="Grant all" sclass="btn-pill-primary"
+                  onClick="@command('grantEverything')"
+                  tooltiptext="Give the selected target every menu and action right"
+                  disabled="@load(not vm.authorized or (vm.editingTarget eq 'ROLE' and vm.selectedRoleCode eq 'SUPER_ADMIN'))"/>
+          <button label="Revoke optional" sclass="btn-pill-danger"
+                  onClick="@command('revokeEverything')"
+                  tooltiptext="Drop every right except the ones required to keep the portal reachable"
+                  disabled="@load(not vm.authorized or (vm.editingTarget eq 'ROLE' and vm.selectedRoleCode eq 'SUPER_ADMIN'))"/>
+          <button label="Reload" sclass="btn-pill-ghost"
+                  onClick="@command('reload')"
+                  tooltiptext="Discard the view and re-read the matrix from the database"
+                  disabled="@load(not vm.authorized)"/>
+          <button label="@load(vm.saving ? 'Saving...' : 'Save')"
+                  sclass="btn-pill-success"
+                  onClick="@command('save')"
+                  disabled="@load(vm.pendingChangesCount eq 0 or vm.saving or not vm.authorized)"/>
+          <button label="Discard" sclass="btn-pill-quiet"
+                  onClick="@command('clearPendingChanges')"
+                  disabled="@load(vm.pendingChangesCount eq 0 or not vm.authorized)"/>
+        </hlayout>
+        <!-- Save feedback -->
+        <div sclass="save-feedback" visible="@load(not empty vm.saveMessage)">
+          <label sclass="@load(vm.saving ? 'save-saving' : (vm.saveMessage.contains('failed') ? 'save-error' : 'save-success'))"
+                 value="@load(vm.saveMessage)"/>
+        </div>
+      </div>
+
+        <!-- ══════════ ACCESS DENIED ══════════ -->
+        <div sclass="card perm-denied" visible="@load(not vm.authorized)">
+          <div sclass="empty-state">
+            <label sclass="empty-state-mark" value="🔒"/>
+            <label sclass="empty-state-title" value="Permission Management Unavailable"/>
+            <label sclass="empty-state-text"
+                   value="This page is restricted to Super Admin users only. Contact your administrator if you believe you should have access."/>
+          </div>
+        </div>
+
+        <!-- ══════════ 2. TWO COLUMNS ══════════ -->
+        <div sclass="perm-layout" visible="@load(vm.authorized)">
+
+          <!-- ── LEFT COLUMN ── -->
+          <div sclass="perm-left">
+
+            <!-- A. Role or user card -->
+            <div sclass="card perm-selector-card">
+              <label sclass="card-title" value="Role or user"/>
+
+              <!-- Segmented control -->
+              <div sclass="perm-segmented">
+                <button label="Roles"
+                        sclass="@load(vm.segBtnClass('ROLE'))"
+                        onClick="@command('setSelectionMode', mode='ROLE')"/>
+                <button label="Users"
+                        sclass="@load(vm.segBtnClass('USER'))"
+                        onClick="@command('setSelectionMode', mode='USER')"/>
+              </div>
+
+              <!-- Search -->
+              <textbox sclass="perm-search" placeholder="Search…"
+                       value="@bind(vm.selectorSearchQuery)"
+                       onChanging="@command('filterSelector', term=event.value)"/>
+
+              <!-- List -->
+              <div sclass="perm-selector-list" children="@load(vm.filteredSelectionItems)">
+                <template name="children" var="opt">
+                  <div sclass="@load(vm.selectorRowClass(opt))"
+                       onClick="@command('selectItem', item=opt)">
+                    <label sclass="perm-selector-name" value="@load(opt.label)"/>
+                    <label sclass="perm-selector-meta" value="@load(opt.sub)"/>
+                  </div>
+                </template>
+              </div>
+
+              <!-- Divider + summary -->
+              <separator sclass="perm-divider"/>
+              <div sclass="perm-role-summary">
+                <label sclass="perm-role-name" value="@load(vm.selectedRoleName)"/>
+                <label sclass="perm-role-desc" value="@load(vm.selectedRoleDescription)"/>
+                <div sclass="perm-progress">
+                  <div sclass="perm-progress-track">
+                    <div sclass="perm-progress-fill" style="@load(vm.completionStyle)"/>
+                  </div>
+                </div>
+                <hlayout spacing="8px" sclass="perm-stats">
+                  <div sclass="perm-stat-tile">
+                    <label sclass="perm-stat-val" value="@load(vm.menuProgressText)"/>
+                    <label sclass="perm-stat-lab" value="Menus"/>
+                  </div>
+                  <div sclass="perm-stat-tile">
+                    <label sclass="perm-stat-val" value="@load(vm.actionProgressText)"/>
+                    <label sclass="perm-stat-lab" value="Actions"/>
+                  </div>
+                  <div sclass="perm-stat-tile">
+                    <label sclass="perm-stat-val" value="@load(vm.grantedTotal.toString())"/>
+                    <label sclass="perm-stat-lab" value="Granted"/>
+                  </div>
+                </hlayout>
+              </div>
+            </div>
+
+            <!-- B. Members card -->
+            <div sclass="card perm-members-card">
+              <div sclass="perm-members-head">
+                <label sclass="card-title" value="Members"/>
+                <label sclass="card-subtitle" value="@load(vm.memberCountText)"/>
+              </div>
+              <textbox sclass="perm-search" placeholder="Search by username or ID…"
+                       value="@bind(vm.searchQuery)"
+                       onChanging="@command('searchRoleUsers', term=event.value)"/>
+              <div sclass="perm-members-list" children="@load(vm.filteredRoleUsers)">
+                <template name="children" var="u">
+                  <div sclass="@load(vm.memberRowClass(u))"
+                       onClick="@command('selectUser', userId=u.getUser().id)">
+                    <div sclass="perm-avatar">
+                      <label value="@load(u.avatarInitial)"/>
+                    </div>
+                    <div sclass="perm-member-info">
+                      <label sclass="perm-member-name" value="@load(u.getUser().username)"/>
+                      <label sclass="perm-member-role" value="@load(u.getUser().role.roleName)"/>
+                    </div>
+                    <label sclass="perm-member-id" value="@load(u.getUser().id)"/>
+                  </div>
+                </template>
+              </div>
+              <div sclass="perm-members-empty" visible="@load(empty vm.filteredRoleUsers)">
+                <label sclass="empty-state-text" value="Users have no members."/>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ── RIGHT COLUMN ── -->
+          <div sclass="perm-right">
+
+            <!-- C. Menu access card -->
+            <div sclass="card perm-menu-card">
+              <div sclass="perm-card-head">
+                <div sclass="perm-card-head-text">
+                  <label sclass="card-title" value="Menu access"/>
+                  <label sclass="card-subtitle"
+                         value="Controls which modules appear in the sidebar and can be opened."/>
+                </div>
+                <hlayout valign="middle" spacing="8px" sclass="perm-card-head-actions">
+                  <span sclass="perm-counter-pill">
+                    <label value="@load(vm.menuProgressText)"/>
+                  </span>
+                  <button label="Enable all" sclass="btn-pill-blue"
+                          onClick="@command('grantAllMenus')"/>
+                  <button label="Clear all" sclass="btn-pill-quiet"
+                          onClick="@command('revokeAllMenus')"/>
+                </hlayout>
+              </div>
+              <div sclass="perm-tile-grid" children="@load(vm.menuItems)">
+                <template name="children" var="item">
+                  <div sclass="@load(vm.tileClass(item))"
+                       tabindex="0"
+                       onClick="@command('toggle', item=item)"
+                       onOK="@command('toggle', item=item)">
+                    <checkbox sclass="@load(vm.tileCheckClass(item))"
+                              checked="@load(vm.isGranted(item))"
+                              disabled="@load(vm.isLocked(item))"/>
+                    <div sclass="perm-tile-body">
+                      <label sclass="perm-tile-name" value="@load(item.label)"/>
+                      <label sclass="perm-tile-hint" value="@load(item.hint)"/>
+                      <label sclass="perm-tile-key" value="@load(item.code)"/>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <!-- D. Action rights card -->
+            <div sclass="card perm-action-card">
+              <div sclass="perm-card-head">
+                <div sclass="perm-card-head-text">
+                  <label sclass="card-title" value="Action rights"/>
+                  <label sclass="card-subtitle"
+                         value="Controls the individual edit, delete, create and submit operations inside each module."/>
+                </div>
+                <hlayout valign="middle" spacing="8px" sclass="perm-card-head-actions">
+                  <span sclass="perm-counter-pill">
+                    <label value="@load(vm.actionProgressText)"/>
+                  </span>
+                  <button label="Enable all" sclass="btn-pill-blue"
+                          onClick="@command('grantAllActions')"/>
+                  <button label="Clear all" sclass="btn-pill-quiet"
+                          onClick="@command('revokeAllActions')"/>
+                </hlayout>
+              </div>
+              <div sclass="perm-module-groups" children="@load(vm.actionModuleGroups)">
+                <template name="children" var="group">
+                  <div sclass="@load(vm.moduleGroupClass(group.menuCode))">
+                    <div sclass="perm-module-head">
+                      <label sclass="perm-module-name" value="@load(group.menuLabel)"/>
+                      <label sclass="perm-module-note" value="Module is off"
+                             visible="@load(not vm.isMenuGranted(group.menuCode))"/>
+                    </div>
+                    <div sclass="perm-tile-grid" children="@load(group.actions)">
+                      <template name="children" var="item">
+                        <div sclass="@load(vm.tileClass(item))"
+                             tabindex="0"
+                             onClick="@command('toggle', item=item)"
+                             onOK="@command('toggle', item=item)">
+                          <checkbox sclass="@load(vm.tileCheckClass(item))"
+                                    checked="@load(vm.isGranted(item))"
+                                    disabled="@load(vm.isLocked(item))"/>
+                          <div sclass="perm-tile-body">
+                            <label sclass="perm-tile-name" value="@load(item.label)"/>
+                            <label sclass="perm-tile-hint" value="@load(item.hint)"/>
+                            <label sclass="perm-tile-key" value="@load(item.code)"/>
+                          </div>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+</zk>

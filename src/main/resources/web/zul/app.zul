@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="WYS Inventory Portal - Command Center" contentType="text/html;charset=UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="native">
+    <style src="~./style/theme.css"/>
+
+    <div hflex="1" vflex="1"
+         apply="org.zkoss.bind.BindComposer"
+         viewModel="@id('vm') @init('com.wys.inventory.viewmodel.AppViewModel')">
+
+        <borderlayout height="100vh" width="100%">
+
+            <!-- Header -->
+            <north height="60px" sclass="shell-header" border="none">
+                <div sclass="shell-header-content">
+                    <hlayout valign="middle" spacing="12px" sclass="shell-header-left">
+                        <a href="/zul/index" sclass="shell-brand-link" tooltiptext="Go to Public Landing Page">
+                            <span sclass="shell-brand-mark">W</span>
+                            <span sclass="shell-brand-title">WYS Portal</span>
+                        </a>
+                        <label sclass="badge badge-success badge-dot" value="Live System"/>
+                    </hlayout>
+
+                    <hlayout valign="middle" spacing="12px" sclass="shell-header-right">
+                        <!-- User Profile Card (clickable to open profile page) -->
+                        <div sclass="shell-user-card"
+                             onClick="@command('navigateToProfile')"
+                             tooltiptext="View my profile">
+                            <div sclass="shell-user-avatar">
+                                <label value="@load(vm.avatarInitial)"/>
+                            </div>
+                            <div sclass="shell-user-details">
+                                <label sclass="shell-user-name" value="@load(vm.username)"/>
+                                    <span sclass="@load(vm.roleTagClass)">
+                                    <label value="@load(vm.role)"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div sclass="shell-header-sep"/>
+
+                        <!-- Logout Link -->
+                        <a href="/perform_logout" sclass="shell-logout-btn" tooltiptext="Sign out of WYS Portal">
+                            <h:svg class="shell-logout-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <h:path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <h:polyline points="16 17 21 12 16 7"/>
+                                <h:line x1="21" y1="12" x2="9" y2="12"/>
+                            </h:svg>
+                            <span sclass="shell-logout-text">Logout</span>
+                        </a>
+                    </hlayout>
+                </div>
+            </north>
+
+            <!-- Sidebar navigation -->
+            <!-- Sidebar navigation -->
+<west width="248px" collapsible="true" sclass="shell-sidebar" border="none">
+    <vlayout spacing="4px">
+        <label sclass="shell-nav-group" value="Core Modules"/>
+        
+        <!-- Render menu items dynamically using template -->
+        <vlayout spacing="4px" children="@load(vm.allowedMenus)">
+            <template name="children" var="menu">
+                <button label="@load(menu.label)"
+                        sclass="shell-nav-btn"
+                        onClick="@command('navigate', page=menu.routeUrl)"/>
+            </template>
+        </vlayout>
+
+        <separator height="24px" bar="false"/>
+
+        <label sclass="shell-nav-group" value="All credit"/>
+        <div sclass="shell-credit">
+            <label sclass="shell-credit-title" value="Bashar"/>
+            <label sclass="shell-credit-desc" value="ZK Framework MVVM with Spring boot"/>
+            <label sclass="shell-credit-tag" value="TCD CHAD"/>
+        </div>
+    </vlayout>
+</west>
+
+            <!-- Content -->
+            <center border="none" autoscroll="true" sclass="shell-main">
+                <include id="mainContent" src="@load(vm.currentView)" style="width: 100%; height: 100%;"/>
+            </center>
+
+            <!-- Footer -->
+            <south height="36px" border="none" sclass="shell-footer">
+                <div sclass="shell-footer-inner">
+                    <label sclass="shell-footer-text" value="Bashar Chad TCD &amp; ZK Framework with Spring boot • Enterprise Command Center"/>
+                </div>
+            </south>
+
+        </borderlayout>
+    </div>
+</zk>

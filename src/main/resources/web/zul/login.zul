@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="Sign In — WYS Inventory Portal" contentType="text/html;charset=UTF-8"?>
+<zk 
+    
+    xmlns="http://www.zkoss.org/2005/zul"
+    
+    
+    xmlns:h="native">
+    <style src="~./style/theme.css"/>
+    <div sclass="login-page"
+         viewModel="@id('vm') @init('com.wys.inventory.viewmodel.LoginViewModel')">
+        <div sclass="login-container">
+            <!-- Navigation back to public website -->
+            <a href="/zul/index" sclass="login-nav-back">
+                <h:svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <h:line x1="19" y1="12" x2="5" y2="12"/>
+                    <h:polyline points="12 19 5 12 12 5"/>
+                </h:svg>
+                <h:span>Back to WYS Home</h:span>
+            </a>
+            <!-- Brand header -->
+            <div sclass="login-brand-header">
+                <div sclass="login-brand-badge">W</div>
+                <div sclass="login-brand-info">
+                    <label sclass="login-brand-name" value="WYS Warehouse Portal"/>
+                    <label sclass="login-brand-desc" value="Enterprise Inventory &amp; Stock Command"/></div></div>
+            <!-- Login Card -->
+            <div sclass="login-card">
+                <div sclass="login-card-head">
+                    <label sclass="login-card-title" value="Welcome Back"/>
+                    <label sclass="login-card-desc" value="Enter your staff credentials to access your dashboard."/></div>
+                <!-- Alert Messages -->
+                <div sclass="login-alert-box login-alert-error" visible="@load(not empty vm.errorMessage)">
+                    <h:svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <h:circle cx="12" cy="12" r="10"/>
+                        <h:line x1="12" y1="8" x2="12" y2="12"/>
+                        <h:line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </h:svg>
+                    <label value="@load(vm.errorMessage)"/></div>
+                <div sclass="login-alert-box login-alert-success" visible="@load(not empty vm.infoMessage)">
+                    <h:svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <h:path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <h:polyline points="22 4 12 14.01 9 11.01"/>
+                    </h:svg>
+                    <label value="@load(vm.infoMessage)"/></div>
+                <!-- Standard Form for Spring Security processing -->
+                <h:form action="/perform_login" method="POST" class="login-form">
+                    <div sclass="login-group">
+                        <label sclass="login-label" value="Username"/>
+                        <h:div class="login-input-wrapper">
+                            <h:input type="text" id="loginUsername" name="username" placeholder="e.g. admin or manager"
+                                     class="login-input" autofocus="autofocus" required="required" autocomplete="username"/>
+                        </h:div></div>
+                    <div sclass="login-group">
+                        <label sclass="login-label" value="Password"/>
+                        <h:div class="login-input-wrapper">
+                            <h:input type="password" id="loginPassword" name="password" placeholder="••••••••"
+                                     class="login-input" required="required" autocomplete="current-password"/>
+                        </h:div></div>
+                    <h:button type="submit" class="login-submit-button">
+                        <h:span>Sign In to Portal</h:span>
+                        <h:svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <h:line x1="5" y1="12" x2="19" y2="12"/>
+                            <h:polyline points="12 5 19 12 12 19"/>
+                        </h:svg>
+                    </h:button>
+                </h:form>
+                <!-- Quick-fill Demo Roles -->
+                <div sclass="login-demo-section">
+                    <div sclass="login-demo-header">
+                        <label sclass="login-demo-title" value="Demo Credentials"/>
+                        <label sclass="login-demo-subtitle" value="Click to auto-fill"/></div>
+                    <div sclass="login-demo-list">
+                        <h:button type="button" class="login-demo-item"
+                                  onclick="document.getElementById('loginUsername').value='superadmin'; document.getElementById('loginPassword').value='12345'; document.getElementById('loginUsername').focus();">
+                            <h:div class="login-demo-left">
+                                <h:span class="login-demo-pill login-demo-admin">SUPERADMIN</h:span>
+                                <h:span class="login-demo-creds">
+                                    <h:strong class="login-demo-user">superadmin</h:strong>
+                                    <h:span class="login-demo-sep">•</h:span>
+                                    <h:span class="login-demo-pass">12345</h:span></h:span>
+                            </h:div>
+                            <h:span class="login-demo-action">Auto-fill ↳</h:span>
+                        </h:button>
+                        <h:button type="button" class="login-demo-item"
+                                  onclick="document.getElementById('loginUsername').value='admin'; document.getElementById('loginPassword').value='12345'; document.getElementById('loginUsername').focus();">
+                            <h:div class="login-demo-left">
+                                <h:span class="login-demo-pill login-demo-admin">ADMIN</h:span>
+                                <h:span class="login-demo-creds">
+                                    <h:strong class="login-demo-user">admin</h:strong>
+                                    <h:span class="login-demo-sep">•</h:span>
+                                    <h:span class="login-demo-pass">12345</h:span></h:span>
+                            </h:div>
+                            <h:span class="login-demo-action">Auto-fill ↳</h:span>
+                        </h:button>
+                        <h:button type="button" class="login-demo-item"
+                                  onclick="document.getElementById('loginUsername').value='manager'; document.getElementById('loginPassword').value='12345'; document.getElementById('loginUsername').focus();">
+                            <h:div class="login-demo-left">
+                                <h:span class="login-demo-pill login-demo-mgr">MANAGER</h:span>
+                                <h:span class="login-demo-creds">
+                                    <h:strong class="login-demo-user">manager</h:strong>
+                                    <h:span class="login-demo-sep">•</h:span>
+                                    <h:span class="login-demo-pass">12345</h:span></h:span>
+                            </h:div>
+                            <h:span class="login-demo-action">Auto-fill ↳</h:span>
+                        </h:button></div></div>
+                <div sclass="login-security-notice">
+                    <h:svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <h:rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <h:path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </h:svg>
+                    <h:span>Spring Security 6 • Encrypted session • WYS Enterprise</h:span></div></div></div></div>
+</zk>
